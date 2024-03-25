@@ -18,30 +18,60 @@ function divide(num1, num2) {
     }
 };
 
-function add_button()
-
-function operate(num1, num2, operator) {
-    if (typeof num1 != "number" || typeof num2 != "number") {
-        alert("Cant divide by Zero");
-        throw new Error("Input must be of type Number");
-    } else {
-        if (operator == "+") {
-            console.log(add(num1,num2));
-        } else if (operator == "-") {
-            console.log(subtract(num1,num2));
-        } else if (operator == "*") {
-            console.log(multiply(num1,num2));
-        } else {
-            console.log(divide(num1,num2));
-        };
-    }
-}
-
-function addNumber(num) {
-    tempdisplay = tempdisplay + num;
-    display = display + num;
-    display.textContent = display;
+function equals() {
+    operate(Number(firstNumber), Number(numberHolder), operator);
+    result = firstNumber;
+    firstNumber = undefined;
 };
+
+function operate(num1, num2, o) {
+    // Solve whatever is there and display
+    
+    if (o == "+") {
+        r = add(num1, num2);
+    } else if (o == "-") {
+        r = subtract(num1, num2);
+    } else if (o == "*") {
+        r = multiply(num1, num2);
+    } else  {
+        r = divide(num1, num2);
+    };
+
+    firstNumber = r;
+    display.textContent = r;
+
+};
+
+
+function addCharacter(char, what) {
+    if (what == "number") {
+        numberHolder = numberHolder + char;
+        display.textContent = numberHolder;
+    } else {
+        if (result != undefined) {
+            numberHolder = result;
+            result = undefined;
+        }
+        if (firstNumber == undefined) {
+            firstNumber = numberHolder;
+            numberHolder = "";
+            operator = char;
+            display.textContent = char;
+        } else {
+            operate(Number(firstNumber), Number(numberHolder), operator);
+            operator = char;
+            numberHolder = "";
+        }
+    }
+};
+
+function clearAll() {
+    numberHolder = "";
+    firstNumber = undefined;
+    operator = undefined;
+    result = undefined;
+    display.textContent = "";
+}
 
 //Build calculator
 const numbers_container = document.querySelector("#numbers_container");
@@ -54,57 +84,52 @@ for (let i = 1; i <= 9; i++) {
     let newbutton = document.createElement("button");
     newbutton.classList.add("button");
     newbutton.textContent = i
-    newbutton.addEventListener("click", (e) => addNumber(Number(e.target.textContent)));
+    newbutton.addEventListener("click", (e) => addCharacter(e.target.textContent, "number"));
     numbers_container.appendChild(newbutton);
 };
 
+// BUILD UI
 // Add bottom row
 let newbutton = document.createElement("button");
 newbutton.textContent = "Clr";
 newbutton.classList.add("button");
-newbutton.addEventListener("click", () => "Hey");
+newbutton.addEventListener("click", () => clearAll());
 bottom_container.appendChild(newbutton);
 let newbutton1 = document.createElement("button");
 newbutton1.textContent = "0";
 newbutton1.classList.add("button");
-newbutton1.addEventListener("click", () => "Hey");
+newbutton1.addEventListener("click", (e) => addCharacter(e.target.textContent, "number"));
 bottom_container.appendChild(newbutton1);
 let newbutton2 = document.createElement("button");
 newbutton2.textContent = "=";
 newbutton2.classList.add("button");
-newbutton2.addEventListener("click", () => "Hey");
+newbutton2.addEventListener("click", () => equals());
 bottom_container.appendChild(newbutton2);
 
 // Add right side
 let newbutton3 = document.createElement("button");
 newbutton3.textContent = "/";
 newbutton3.classList.add("button");
-newbutton3.addEventListener("click", () => "Hey");
+newbutton3.addEventListener("click", (e) => addCharacter(e.target.textContent, "operator"));
 right_container.appendChild(newbutton3);
 let newbutton4 = document.createElement("button");
-newbutton4.textContent = "X";
+newbutton4.textContent = "*";
 newbutton4.classList.add("button");
-newbutton4.addEventListener("click", () => "Hey");
+newbutton4.addEventListener("click", (e) => addCharacter(e.target.textContent, "operator"));
 right_container.appendChild(newbutton4);
 let newbutton5 = document.createElement("button");
 newbutton5.textContent = "-";
 newbutton5.classList.add("button");
-newbutton5.addEventListener("click", () => "Hey");
+newbutton5.addEventListener("click", (e) => addCharacter(e.target.textContent, "operator"));
 right_container.appendChild(newbutton5);
 let newbutton6 = document.createElement("button");
-newbutton6.textContent = "-";
+newbutton6.textContent = "+";
 newbutton6.classList.add("button");
-newbutton6.addEventListener("click", () => "Hey");
+newbutton6.addEventListener("click", (e) => addCharacter(e.target.textContent, "operator"));
 right_container.appendChild(newbutton6);
 
-// Initialise content array
-let displaytext = "";
-let tempdisplaytext = "";
-let content = [];
-
-
-
-
-
-
-
+// Initiate empty variables
+let numberHolder = "";
+let firstNumber;
+let operator;
+let result;
